@@ -43,9 +43,8 @@ class ProductCreateTests(TestCase):
         count = Product.objects.count()
 
         response = self.app.post(self.url, data=self.data)
+        self.assertEqual(response.data["name"], ["product with this name already exists."])
         self.assertEqual(response.status_code, 400)
 
         self.assertEqual(Product.objects.count(), count)
-
-
 
