@@ -35,3 +35,6 @@ class CustomAPIClient():
 class BaseTest(TestCase):
     def setUp(self):
         self.app = CustomAPIClient(self)
+
+    # metodo, que se llame login, que reciba: user y password
+    # user: User

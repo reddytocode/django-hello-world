@@ -7,7 +7,7 @@ class UserTests(BaseTest):
     def setUp(self):
         super().setUp()
         self.data = {
-            "username": "reddy",
+            "username": "Asdf",
             "password": "1234dff"
         }
         self.url = reverse("users:token_obtain_pair")
