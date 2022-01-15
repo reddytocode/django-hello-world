@@ -4,14 +4,6 @@ from apps.inventory.models import Product
 from apps.inventory.serializers import ProductSerializer
 
 
-class CustomPermission(BasePermission):
-
-    def has_permission(self, request, view):
-        import pdb
-        pdb.set_trace()
-        return True
-
-
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
