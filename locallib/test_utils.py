@@ -1,5 +1,6 @@
 from django.test import TestCase
 from rest_framework.test import APIClient
+from django.urls import reverse
 
 
 class CustomAPIClient():
@@ -31,10 +32,17 @@ class CustomAPIClient():
             self.test_case.assertEqual(response.status_code, status)
         return response
 
+    def login(self, user, password="1234"):
+        url = reverse("users:token_obtain_pair")
+        response = self.app.post(url, data={"username": user.username, "password": password})
+        access_token = response.data["access"]
+        self.app.credentials(HTTP_AUTHORIZATION="Bearer " + access_token)
+
+    def logout(self):
+        self.app.credentials(HTTP_AUTHORIZATION="")
+
 
 class BaseTest(TestCase):
     def setUp(self):
         self.app = CustomAPIClient(self)
 
-    # metodo, que se llame login, que reciba: user y password
-    # user: User

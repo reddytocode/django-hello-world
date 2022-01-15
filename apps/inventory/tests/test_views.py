@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.urls import reverse
 from apps.inventory.models import Product
 from locallib.test_utils import BaseTest
@@ -7,6 +8,16 @@ class ProductListTests(BaseTest):
     def setUp(self):
         super().setUp()
         self.url = reverse("inventory:product-list")
+        self.user = User.objects.create_user("user-1", password="1234")
+        self.app.login(self.user)
+
+    def test_access(self):
+        self.app.logout()
+        self.app.get(self.url, status=401)
+
+        # authenticated user
+        self.app.login(self.user)
+        self.app.get(self.url, status=200)
 
     def test_list(self):
         self.app.get(self.url, status=200)
