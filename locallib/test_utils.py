@@ -31,6 +31,9 @@ class CustomAPIClient():
             self.test_case.assertEqual(response.status_code, status)
         return response
 
+    def credentials(self, **kwargs):
+        self.app.credentials(**kwargs)
+
 
 class BaseTest(TestCase):
     def setUp(self):
