@@ -19,10 +19,6 @@ class ProductListTests(BaseTest):
         self.app.get(self.url, status=200)
 
     def test_list(self):
-        user = User.objects.create_user("Asdf", password="1234dff")
-        response = self.app.post(reverse("users:token_obtain_pair"), {"username": user.username, "password": "1234dff"})
-        access_token = response.data["access"]
-        self.app.credentials(HTTP_AUTHORIZATION="Bearer " + access_token)
         self.app.get(self.url, status=200)
 
 
