@@ -8,15 +8,14 @@ class ProductListTests(BaseTest):
     def setUp(self):
         super().setUp()
         self.url = reverse("inventory:product-list")
-        self.user = User.objects.create_user("user-1", password="1234")
-        self.app.login(self.user)
+        self.app.login()
 
     def test_access(self):
         self.app.logout()
         self.app.get(self.url, status=401)
 
         # authenticated user
-        self.app.login(self.user)
+        self.app.login()
         self.app.get(self.url, status=200)
 
     def test_list(self):
@@ -28,6 +27,7 @@ class ProductRetrieveTests(BaseTest):
         super().setUp()
         self.product = Product.objects.create(name="fake_1", price=1)
         self.url = reverse("inventory:product-retrieve", kwargs={"id": self.product.pk})
+        self.app.login()
 
     def test_ok(self):
         response = self.app.get(self.url, status=200)
@@ -43,6 +43,7 @@ class ProductCreateTests(BaseTest):
             "name": "fake_name",
             "price": 12
         }
+        self.app.login()
 
     def test_create(self):
         count = Product.objects.count()
@@ -85,6 +86,7 @@ class ProductUpdateTests(BaseTest):
             "name": "other_name",
             "price": 2
         }
+        self.app.login()
 
     def test_update(self):
         response = self.app.patch(self.url, data=self.data, status=200)
@@ -109,6 +111,7 @@ class ProductDeleteTests(BaseTest):
         super().setUp()
         self.product = Product.objects.create(name="fake_1", price=1)
         self.url = reverse("inventory:product-retrieve", kwargs={"id": self.product.pk})
+        self.app.login()
 
     def test_delete(self):
         count = Product.objects.count()
