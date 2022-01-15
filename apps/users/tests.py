@@ -13,6 +13,7 @@ class UserTests(BaseTest):
         self.url = reverse("users:token_obtain_pair")
 
     def test_get_token(self):
-        user = User.objects.create_user("Asdf", password="1234dff")
+        User.objects.create_user("Asdf", password="1234dff")
         response = self.app.post(self.url, data=self.data)
         access_token = response.data["access"]
+        self.assertTrue(len(access_token) > 1)
