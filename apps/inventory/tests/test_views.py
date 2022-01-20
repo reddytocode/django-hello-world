@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.urls import reverse
+from rest_framework import status
+
 from apps.inventory.models import Product
 from locallib.test_utils import BaseTest
 
@@ -44,6 +46,25 @@ class ProductCreateTests(BaseTest):
             "price": 12
         }
         self.app.login()
+
+    def test_access(self):
+        self.app.logout()
+        self.app.post(self.url, data=self.data, status=401)
+
+        # superuser user
+        superuser = User.objects.create_user("superuser-1", password="1234")
+        superuser.is_superuser = True
+        superuser.save()
+        self.app.login(superuser)
+        self.app.post(self.url, data=self.data, status=201)
+
+        # staff user hasn't access
+        self.app.logout()
+        staff_user = User.objects.create_user("staff-user-2", password="1234")
+        staff_user.is_staff = True
+        staff_user.save()
+        self.app.login(staff_user)
+        self.app.post(self.url, data=self.data, status=status.HTTP_403_FORBIDDEN)
 
     def test_create(self):
         count = Product.objects.count()
