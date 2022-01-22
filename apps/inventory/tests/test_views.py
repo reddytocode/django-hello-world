@@ -3,6 +3,7 @@ from django.urls import reverse
 from rest_framework import status
 
 from apps.inventory.models import Product
+from apps.inventory.tests.factories import ProductFactory
 from locallib.test_utils import BaseTest
 
 
@@ -11,6 +12,7 @@ class ProductListTests(BaseTest):
         super().setUp()
         self.url = reverse("inventory:product-list")
         self.app.login()
+        self.products = ProductFactory.create_batch(size=2)
 
     def test_access(self):
         self.app.logout()
@@ -21,7 +23,16 @@ class ProductListTests(BaseTest):
         self.app.get(self.url, status=200)
 
     def test_list(self):
-        self.app.get(self.url, status=200)
+        response = self.app.get(self.url, status=200)
+        # data -> response
+        # product -> DB
+        for product_data, product in zip(response.data["results"], self.products):
+            self.assertEqual(product_data["name"], product.name)
+            self.assertEqual(product_data["price"], product.price)
+
+    def test_num_queries(self):
+        with self.assertNumQueries(3):
+            self.app.get(self.url, status=200)
 
 
 class ProductRetrieveTests(BaseTest):
@@ -103,7 +114,7 @@ class ProductCreateTests(BaseTest):
 class ProductUpdateTests(BaseTest):
     def setUp(self):
         super().setUp()
-        self.product = Product.objects.create(name="fake_1", price=1)
+        self.product = ProductFactory()
         self.url = reverse("inventory:product-retrieve", kwargs={"id": self.product.pk})
         self.data = {
             "name": "other_name",
@@ -133,7 +144,7 @@ class ProductUpdateTests(BaseTest):
 class ProductDeleteTests(BaseTest):
     def setUp(self):
         super().setUp()
-        self.product = Product.objects.create(name="fake_1", price=1)
+        self.product = ProductFactory()
         self.url = reverse("inventory:product-retrieve", kwargs={"id": self.product.pk})
         self.app.login(is_super_user=True)
 
