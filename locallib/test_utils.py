@@ -34,9 +34,13 @@ class CustomAPIClient():
             self.test_case.assertEqual(response.status_code, status)
         return response
 
-    def login(self, user=None, password="1234"):
+    def login(self, user=None, password="1234", is_super_user=False):
         url = reverse("users:token_obtain_pair")
         user = user if user else self.user
+        if is_super_user:
+            user.is_superuser = True
+            user.save()
+            
         response = self.app.post(url, data={"username": user.username, "password": password})
         access_token = response.data["access"]
         self.app.credentials(HTTP_AUTHORIZATION="Bearer " + access_token)

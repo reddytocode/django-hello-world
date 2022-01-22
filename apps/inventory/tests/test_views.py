@@ -45,7 +45,7 @@ class ProductCreateTests(BaseTest):
             "name": "fake_name",
             "price": 12
         }
-        self.app.login()
+        self.app.login(is_super_user=True)
 
     def test_access(self):
         self.app.logout()
@@ -92,7 +92,9 @@ class ProductCreateTests(BaseTest):
             "name": "fake_name_123",
             "price": 12
         }
+
         count = Product.objects.count()
+
         response = self.app.post(self.url, data=data, status=400)
         self.assertEqual(response.data["name"], ["invalid name."])
         self.assertEqual(Product.objects.count(), count)
@@ -107,7 +109,7 @@ class ProductUpdateTests(BaseTest):
             "name": "other_name",
             "price": 2
         }
-        self.app.login()
+        self.app.login(is_super_user=True)
 
     def test_update(self):
         response = self.app.patch(self.url, data=self.data, status=200)
@@ -123,6 +125,7 @@ class ProductUpdateTests(BaseTest):
             "name": other_product.name,
             "price": 12
         }
+
         response = self.app.patch(self.url, data=data, status=400)
         self.assertEqual(response.data["name"], ["product with this name already exists."])
 
@@ -132,10 +135,11 @@ class ProductDeleteTests(BaseTest):
         super().setUp()
         self.product = Product.objects.create(name="fake_1", price=1)
         self.url = reverse("inventory:product-retrieve", kwargs={"id": self.product.pk})
-        self.app.login()
+        self.app.login(is_super_user=True)
 
     def test_delete(self):
         count = Product.objects.count()
+
         self.app.delete(self.url, status=204)
         self.assertEqual(Product.objects.count(), count-1)
 
