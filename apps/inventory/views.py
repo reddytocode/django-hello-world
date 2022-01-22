@@ -13,6 +13,10 @@ class ProductViewSet(viewsets.ModelViewSet):
     lookup_field = "pk"
     lookup_url_kwarg = "id"
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.order_by("-price")
+
     def get_permissions(self):
         if self.action not in ("list", "retrieve"):
             self.permission_classes = self.permission_classes + [IsSuperUser]

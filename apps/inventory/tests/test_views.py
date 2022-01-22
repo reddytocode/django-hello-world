@@ -12,7 +12,7 @@ class ProductListTests(BaseTest):
         super().setUp()
         self.url = reverse("inventory:product-list")
         self.app.login()
-        self.products = ProductFactory.create_batch(size=2)
+        self.products = ProductFactory.create_batch(10)
 
     def test_access(self):
         self.app.logout()
@@ -22,8 +22,10 @@ class ProductListTests(BaseTest):
         self.app.login()
         self.app.get(self.url, status=200)
 
-    def test_list(self):
+    def test_default_ordering(self):
+        # default ordering, price high-> price lower
         response = self.app.get(self.url, status=200)
+        self.products.sort(key=lambda o: o.price, reverse=True)
         # data -> response
         # product -> DB
         for product_data, product in zip(response.data["results"], self.products):
