@@ -18,8 +18,6 @@ class ProductInventoryFactory(factory.django.DjangoModelFactory):
     quantity = factory.Faker("pyint", min_value=0, max_value=100)
 
 
-# TODO: CREATE factory for Product Order and Order
-
 class OrderFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Order
