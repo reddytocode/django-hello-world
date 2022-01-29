@@ -1,10 +1,17 @@
-from rest_framework import viewsets
+from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiResponse
+from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from apps.inventory.models import Product
 from apps.inventory.permissions import IsSuperUser
 from apps.inventory.serializers import ProductSerializer
 
 
+@extend_schema_view(
+    list=extend_schema(
+        summary="Product List",
+        description="Returns Paginated list of products.",
+    ),
+)
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
