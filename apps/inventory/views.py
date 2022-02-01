@@ -8,8 +8,24 @@ from apps.inventory.serializers import ProductSerializer
 
 @extend_schema_view(
     list=extend_schema(
-        summary="Product List",
+        summary="Products List",
         description="Returns Paginated list of products.",
+    ),
+    create=extend_schema(
+        summary="Product Create",
+        description="Returns a form to create a product.",
+    ),
+    retrieve=extend_schema(
+        summary="Product Retrieve",
+        description="Returns a certain Product",
+    ),
+    partial_update=extend_schema(
+        summary="Product Partial Update",
+        description="Returns a form to update a certain Product",
+    ),
+    destroy=extend_schema(
+        summary="Product Delete",
+        description="Returns a page to delete a product",
     ),
 )
 class ProductViewSet(viewsets.ModelViewSet):
