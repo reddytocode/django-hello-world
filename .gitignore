@@ -26,6 +26,7 @@ media
 
 # Distribution / packaging
 .vscode
+!.vscode/settings.json
 .Python
 build/
 develop-eggs/
