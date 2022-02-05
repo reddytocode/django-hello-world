@@ -33,7 +33,7 @@ class ProductListTests(BaseTest):
             self.assertEqual(product_data["price"], product.price)
 
     def test_num_queries(self):
-        with self.assertNumQueries(3):
+        with self.assertNumQueries(5):
             self.app.get(self.url, status=200)
 
 
