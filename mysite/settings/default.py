@@ -1,16 +1,16 @@
-
+import os
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+import dotenv
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+dotenv.read_dotenv()
 
 
 SECRET_KEY = 'django-insecure-(d_-8vs7z-r*5do32fz0!y@1r+tv&pvu=+u0^05fy=e#6#h74y'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -64,10 +64,16 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+print("redy log", os.getenv("DB_USER"))
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("DB_NAME", "django_hola_mundo"),
+        "USER": os.getenv("DB_USER", "root"),
+        "PASSWORD": os.getenv("DB_PASS", ""),
+        "HOST": os.getenv("DB_HOST", "localhost"),
+        "PORT": os.getenv("DB_PORT", 5432),
+        "TEST": {"NAME": "test_django_hola_mundo"},
     }
 }
 

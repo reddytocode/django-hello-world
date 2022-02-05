@@ -6,6 +6,16 @@ on: push
 jobs:
   pytest:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: root
+          POSTGRES_DB: django_hola_mundo
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 3.9
@@ -13,6 +23,10 @@ jobs:
         with:
           python-version: 3.9
           cache: pip
-          cache-dependency-path: requirements.lint.txt
+          cache-dependency-path: requirements.txt
       - name: Install Python dependencies
         run: python -m pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          python -m pytest --cache-clear --showlocals --verbose .
